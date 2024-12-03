@@ -12,10 +12,10 @@ This endpoint is used to register a new user.
 
 The request body should be a JSON object containing the following fields:
 
-- `firstName` (string, required): The first name of the user. Must be at least 2 characters long.
-- `lastName` (string, required): The last name of the user.
-- `email` (string, required): The email address of the user. Must be a valid email format.
-- `password` (string, required): The password for the user. Must be at least 6 characters long.
+-   `firstName` (string, required): The first name of the user. Must be at least 2 characters long.
+-   `lastName` (string, required): The last name of the user.
+-   `email` (string, required): The email address of the user. Must be a valid email format.
+-   `password` (string, required): The password for the user. Must be at least 6 characters long.
 
 #### Example Request
 
@@ -28,7 +28,6 @@ The request body should be a JSON object containing the following fields:
     "email": "john.doe@example.com",
     "password": "password123"
 }
-
 ```
 
 ### Login User
@@ -40,9 +39,55 @@ The request body should be a JSON object containing the following fields:
 **Description:** Logs in an existing user.
 
 **Request Body:**
+
 ```json
 {
-  "email": "john.doe@example.com",
-  "password": "password123"
+    "email": "john.doe@example.com",
+    "password": "password123"
 }
 ```
+
+### `GET /auth/me`
+
+#### Description
+
+Fetch the authenticated user's details.
+
+#### Headers
+
+-   `Cookie`: `token=<JWT_TOKEN>`
+
+#### Response
+
+-   **200 OK**
+    ```json
+    {
+        "_id": "60d0fe4f5311236168a109ca",
+        "fullName": {
+            "firstName": "John",
+            "lastName": "Doe"
+        },
+        "email": "john.doe@example.com",
+        "password": "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Z5l5l5l5l5l5l5l5l5l",
+        "socketId": "someSocketId"
+    }
+    ```
+
+### `POST /auth/logout`
+
+#### Description
+
+Logs out the authenticated user by clearing the authentication token.
+
+#### Headers
+
+-   `Cookie`: `token=<JWT_TOKEN>`
+
+#### Response
+
+-   **200 OK**
+    ```json
+    {
+        "message": "Logged out successfully"
+    }
+    ```
