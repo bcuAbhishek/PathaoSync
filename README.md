@@ -100,7 +100,7 @@ Registers a new captain.
 
 #### Request Body
 
-````json
+```json
 {
     "firstName": "John",
     "lastName": "Doe",
@@ -112,21 +112,84 @@ Registers a new captain.
     "capacity": 4,
     "type": "car"
 }
-````
+```
 
 #### Response
-- **201 Created**
-  ```json
-  {
-    "message": "Captain created successfully",
-    "captain": {
+
+-   **201 Created**
+    ```json
+    {
+        "message": "Captain created successfully",
+        "captain": {
+            "_id": "60d0fe4f5311236168a109ca",
+            "fullName": {
+                "firstName": "John",
+                "lastName": "Doe"
+            },
+            "email": "john.doe@example.com",
+            "password": "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Z5l5l5l5l5l5l5l5l5l",
+            "phone": "1234567890",
+            "vehicle": {
+                "color": "Red",
+                "plate": "ABC123",
+                "capacity": 4,
+                "type": "car"
+            },
+            "status": "offline",
+            "socketId": null,
+            "location": {
+                "latitude": null,
+                "longitude": null
+            }
+        }
+    }
+    ```
+
+### `POST /captain/login`
+
+#### Description
+
+Logs in an existing captain.
+
+#### Request Body
+
+```json
+{
+    "email": "john.doe@example.com",
+    "password": "password123"
+}
+```
+
+#### Response
+
+-   **200 OK**
+    ```json
+    {
+        "message": "Captain Login successful"
+    }
+    ```
+
+### `GET /captain/getCaptain`
+
+#### Description
+
+Fetch the authenticated captain's details.
+
+#### Headers
+
+-   `Cookie`: `token=<JWT_TOKEN>`
+
+#### Response
+
+-   **200 OK**
+    ```json
+    {
         "_id": "60d0fe4f5311236168a109ca",
         "fullName": {
             "firstName": "John",
             "lastName": "Doe"
         },
         "email": "john.doe@example.com",
-        "password": "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Z5l5l5l5l5l5l5l5l5l",
         "phone": "1234567890",
         "vehicle": {
             "color": "Red",
@@ -141,5 +204,23 @@ Registers a new captain.
             "longitude": null
         }
     }
-  }
+    ```
+
+### `POST /captain/logout`
+
+#### Description
+
+Logs out the authenticated captain by clearing the authentication token.
+
+#### Headers
+
+-   `Cookie`: `token=<JWT_TOKEN>`
+
+#### Response
+
+-   **200 OK**
+    ```json
+    {
+        "message": "Logged out successfully"
+    }
     ```

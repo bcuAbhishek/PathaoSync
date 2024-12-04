@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
+import Captain from '../models/captain.model.js';
 
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -14,7 +15,7 @@ export const authMiddleware = async (req, res, next) => {
             throw new Error('Invalid token');
         }
 
-        const user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.id) || await Captain.findById(decoded.id);
         if (!user) {
             throw new Error('User not found');
         }
