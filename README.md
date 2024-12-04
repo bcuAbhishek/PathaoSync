@@ -91,3 +91,55 @@ Logs out the authenticated user by clearing the authentication token.
         "message": "Logged out successfully"
     }
     ```
+
+### `POST /captain/register`
+
+#### Description
+
+Registers a new captain.
+
+#### Request Body
+
+````json
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "password": "password123",
+    "phone": "1234567890",
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "type": "car"
+}
+````
+
+#### Response
+- **201 Created**
+  ```json
+  {
+    "message": "Captain created successfully",
+    "captain": {
+        "_id": "60d0fe4f5311236168a109ca",
+        "fullName": {
+            "firstName": "John",
+            "lastName": "Doe"
+        },
+        "email": "john.doe@example.com",
+        "password": "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Z5l5l5l5l5l5l5l5l5l",
+        "phone": "1234567890",
+        "vehicle": {
+            "color": "Red",
+            "plate": "ABC123",
+            "capacity": 4,
+            "type": "car"
+        },
+        "status": "offline",
+        "socketId": null,
+        "location": {
+            "latitude": null,
+            "longitude": null
+        }
+    }
+  }
+    ```

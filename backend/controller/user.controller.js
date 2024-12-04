@@ -7,19 +7,33 @@ export const createUser = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     try {
         if (!firstName || !email || !password) {
-            res.status(400).json({ message: 'All fields are required' });
+            return res.status(400).json({ message: 'All fields are required' });
         }
 
         if (firstName.length < 2) {
-            throw new Error('First name must be at least 2 characters long');
+            return res
+                .status(400)
+                .json({
+                    message: 'First name must be at least 2 characters long',
+                });
         }
 
         if (!validator.isEmail(email)) {
-            throw new Error('Invalid email');
+            return res.status(400).json({ message: 'Invalid email' });
         }
 
         if (password.length < 6) {
-            throw new Error('Password must be at least 6 characters long');
+            return res
+                .status(400)
+                .json({
+                    message: 'Password must be at least 6 characters long',
+                });
+        }
+
+        const emailExists = await User.findOne({ email });
+
+        if (emailExists) {
+            return res.status(400).json({ message: 'User already exists' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,7 +46,8 @@ export const createUser = async (req, res) => {
 
         res.status(201).json(user);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.log(error);
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -47,18 +62,19 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            throw new Error('User not found');
+            return res.status(400).json({ message: 'User not found' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            throw new Error('Wrong Password');
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         generateTokenAndSetCookie(user._id, res);
         return res.status(200).json({ message: 'Login successful' });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
     }
 };
@@ -70,6 +86,7 @@ export const getMe = async (req, res) => {
         const user = await User.findById(userId);
         return res.status(200).json(user);
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
     }
 };
@@ -79,6 +96,7 @@ export const logoutUser = async (req, res) => {
         res.clearCookie('token');
         return res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
     }
-}
+};

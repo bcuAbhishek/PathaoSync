@@ -4,7 +4,9 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import connectDB from './db/connectDB.js';
+
 import userRoutes from './routes/user.routes.js';
+import captainRoutes from './routes/captain.routes.js';
 
 dotenv.config();
 
@@ -16,10 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/auth', userRoutes);
-
-app.get('/', (req, res) => {
-    res.send('Server is ready');
-});
+app.use('/captain', captainRoutes);
 
 const port = process.env.PORT || 5000;
 
