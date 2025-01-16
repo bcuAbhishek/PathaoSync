@@ -17,6 +17,7 @@ export const createCaptain = async (req, res) => {
             type,
         } = req.body;
 
+        // Check for required fields
         if (
             !firstName ||
             !email ||
@@ -30,6 +31,7 @@ export const createCaptain = async (req, res) => {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
+        // Validate email
         const existingCaptain = await Captain.findOne({ email });
 
         if (existingCaptain) {
@@ -40,8 +42,10 @@ export const createCaptain = async (req, res) => {
             return res.status(400).json({ message: 'Invalid email' });
         }
 
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Create a new captain with initial null location
         const newCaptain = await Captain.create({
             fullName: {
                 firstName,
@@ -56,8 +60,13 @@ export const createCaptain = async (req, res) => {
                 capacity,
                 type,
             },
+            location: {
+                type: 'Point',
+                coordinates: [0, 0], // Initialize with null values
+            },
         });
 
+        // Return response
         return res.status(201).json({
             message: 'Captain created successfully',
             captain: newCaptain,

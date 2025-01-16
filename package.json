@@ -1,12 +1,23 @@
 {
     "name": "uber",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "/backend/server.js",
     "scripts": {
         "start": "nodemon ./backend/server.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "description": ""
+    "description": "",
+    "devDependencies": {
+        "babel-plugin-transform-react-remove-prop-types": "^0.4.24"
+    },
+    "dependencies": {
+        "@react-google-maps/api": "^2.20.5",
+        "axios": "^1.7.9",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.4.7",
+        "express-validator": "^7.2.1",
+        "socket.io": "^4.8.1"
+    }
 }
