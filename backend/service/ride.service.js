@@ -12,7 +12,7 @@ export const getFare = async (pickup, destination) => {
 
     const baseFare = 50; // Base fare in Nepalese Rupee
     const perKmRate = {
-        car: 50,
+        car: 60,
         auto: 20,
         motorcycle: 15,
     };

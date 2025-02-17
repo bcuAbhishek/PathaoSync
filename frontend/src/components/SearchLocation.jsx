@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { BsChevronCompactDown } from 'react-icons/bs';
+import { ChevronDown, MapPin, Navigation } from 'lucide-react';
 import LocationPanel from './LocationPanel';
-
 
 const SearchLocation = ({
     PanelOpen,
@@ -18,7 +17,6 @@ const SearchLocation = ({
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [destinationSuggestions, setDestinationSuggestions] = useState([]);
 
-    // Mutation to fetch suggestions for pickup
     const { mutate: fetchPickupSuggestions } = useMutation({
         mutationFn: async (input) => {
             if (!input) throw new Error('Input is required');
@@ -28,14 +26,13 @@ const SearchLocation = ({
             return response.data;
         },
         onSuccess: (data) => {
-            setPickupSuggestions(data); // Update pickup suggestions
+            setPickupSuggestions(data);
         },
         onError: (error) => {
             console.error('Error fetching pickup suggestions:', error.message);
         },
     });
 
-    // Mutation to fetch suggestions for destination
     const { mutate: fetchDestinationSuggestions } = useMutation({
         mutationFn: async (input) => {
             if (!input) throw new Error('Input is required');
@@ -45,7 +42,7 @@ const SearchLocation = ({
             return response.data;
         },
         onSuccess: (data) => {
-            setDestinationSuggestions(data); // Update destination suggestions
+            setDestinationSuggestions(data);
         },
         onError: (error) => {
             console.error(
@@ -55,99 +52,124 @@ const SearchLocation = ({
         },
     });
 
-    // Handle input change for pickup location
     const handlePickupChange = (e) => {
         const value = e.target.value;
         setPickupInput(value);
         if (value) {
-            fetchPickupSuggestions(value); // Fetch pickup suggestions
+            fetchPickupSuggestions(value);
         } else {
-            setPickupSuggestions([]); // Clear suggestions
+            setPickupSuggestions([]);
         }
     };
 
-    // Handle input change for destination location
     const handleDestinationChange = (e) => {
         const value = e.target.value;
         setDestinationInput(value);
         if (value) {
-            fetchDestinationSuggestions(value); // Fetch destination suggestions
+            fetchDestinationSuggestions(value);
         } else {
-            setDestinationSuggestions([]); // Clear suggestions
+            setDestinationSuggestions([]);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (pickupInput && destinationInput) {
+            handleVehiclePrice();
             setVehiclePanelOpen(true);
-        } else {
-            alert('Please enter both pickup and destination locations.');
         }
     };
 
     return (
-        <div className='p-4'>
-            <h3 className='text-2xl font-bold mb-4'>Find your destination</h3>
-            <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-                {/* Pickup Location Input */}
-                <div className='relative'>
-                    <input
-                        value={pickupInput}
-                        onClick={() => setPanelOpen(true)}
-                        onChange={handlePickupChange}
-                        type='text'
-                        className='input-box pl-8 w-full'
-                        placeholder='Add a pick-up location'
-                    />
-                    {PanelOpen && (
-                        <LocationPanel
-                            suggestions={pickupSuggestions}
-                            setInput={setPickupInput}
-                            setSuggestions={setPickupSuggestions}
-                        />
-                    )}
-                </div>
+        <div className='relative bg-white rounded-t-3xl'>
+            {/* Handle */}
+            <div className='absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-gray-300 rounded-full' />
 
-                {/* Destination Location Input */}
-                <div className='relative'>
-                    <input
-                        value={destinationInput}
-                        onClick={() => setPanelOpen(true)}
-                        onChange={handleDestinationChange}
-                        type='text'
-                        className='input-box pl-8 w-full'
-                        placeholder='Add a destination'
-                    />
-                    {PanelOpen && (
-                        <LocationPanel
-                            suggestions={destinationSuggestions}
-                            setInput={setDestinationInput}
-                            setSuggestions={setDestinationSuggestions}
-                        />
-                    )}
-                </div>
-
+            {/* Panel Toggle */}
+            <div className='absolute right-4 top-4'>
                 <button
-                    type='submit'
-                    className='bg-black text-white text-lg font-semibold p-2 rounded-md'
-                    onClick={handleVehiclePrice}
+                    onClick={() => setPanelOpen(false)}
+                    className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${
+                        PanelOpen ? 'visible' : 'invisible'
+                    }`}
                 >
-                    Search for Rides
+                    <ChevronDown className='w-5 h-5 text-gray-600' />
                 </button>
-            </form>
+            </div>
 
-            {/* Divider Line */}
-            <div className='bg-black h-16 w-[1.5px] absolute top-20 left-8'></div>
+            <div className='p-4 pt-4'>
+                <h3 className='text-2xl font-bold text-gray-900 mb-6'>
+                    Where to?
+                </h3>
 
-            {/* Panel Toggle Icon */}
-            <BsChevronCompactDown
-                className={`size-6 absolute top-5 right-8 ${
-                    PanelOpen ? 'visible' : 'hidden'
-                }`}
-                onClick={() => setPanelOpen(false)}
-                style={{ strokeWidth: 0.6 }}
-            />
+                <form onSubmit={handleSubmit} className='space-y-4'>
+                    {/* Location Inputs Container */}
+                    <div className='relative'>
+                        {/* Connecting Line */}
+                        <div className='absolute left-[22px] top-[42px] w-0.5 h-16 bg-gray-300' />
+
+                        {/* Pickup Input */}
+                        <div className='relative mb-4'>
+                            <div className='absolute left-0 top-1/2 -translate-y-1/2 p-2'>
+                                <Navigation className='w-5 h-5 text-green-500' />
+                            </div>
+                            <input
+                                value={pickupInput}
+                                onClick={() => setPanelOpen(true)}
+                                onChange={handlePickupChange}
+                                type='text'
+                                className='w-full pl-10 pr-4 py-3 bg-gray-50 rounded-xl 
+                                         text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 
+                                         focus:ring-green-500 focus:border-transparent transition-all'
+                                placeholder='Enter pickup location'
+                            />
+                            {PanelOpen && pickupSuggestions.length > 0 && (
+                                <LocationPanel
+                                    suggestions={pickupSuggestions}
+                                    setInput={setPickupInput}
+                                    setSuggestions={setPickupSuggestions}
+                                />
+                            )}
+                        </div>
+
+                        {/* Destination Input */}
+                        <div className='relative'>
+                            <div className='absolute left-0 top-1/2 -translate-y-1/2 p-2'>
+                                <MapPin className='w-5 h-5 text-red-500' />
+                            </div>
+                            <input
+                                value={destinationInput}
+                                onClick={() => setPanelOpen(true)}
+                                onChange={handleDestinationChange}
+                                type='text'
+                                className='w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl 
+                                         text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 
+                                         focus:ring-green-500 focus:border-transparent transition-all'
+                                placeholder='Where to?'
+                            />
+                            {PanelOpen && destinationSuggestions.length > 0 && (
+                                <LocationPanel
+                                    suggestions={destinationSuggestions}
+                                    setInput={setDestinationInput}
+                                    setSuggestions={setDestinationSuggestions}
+                                />
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Search Button */}
+                    <button
+                        type='submit'
+                        className='w-full py-3 bg-green-500 text-white font-semibold rounded-xl
+                                  hover:bg-green-600 
+                                 active:transform active:scale-[0.98] transition-all
+                                 disabled:opacity-70 disabled:cursor-not-allowed'
+                        disabled={!pickupInput || !destinationInput}
+                    >
+                        Search Rides
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

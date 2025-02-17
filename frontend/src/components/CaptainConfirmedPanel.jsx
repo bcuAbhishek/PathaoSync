@@ -22,7 +22,7 @@ const CaptainConfirmedPanel = ({
     } = confirmedCaptainData;
 
     return (
-        <div className='fixed inset-x-0 bottom-0 bg-white rounded-t-xl shadow-2xl max-h-[85vh] overflow-y-auto'>
+        <div className=' inset-x-0 bottom-0 bg-white rounded-t-xl shadow-2xl max-h-[85vh] overflow-y-auto'>
             {/* Header */}
             <div className='sticky top-0 bg-white border-b z-10'>
                 <div className='w-12 h-1 bg-gray-300 rounded-full mx-auto my-3' />

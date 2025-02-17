@@ -1,226 +1,153 @@
-# Backend API Documentation
+# 🚗 Ride Hailing Application (PathaoSync)
 
-## User Registration Endpoint
+<img src="./frontend/public/pathaosync-demo.jpg" alt="PathaoSync Demo" width="800"/>
 
-### Endpoint: `/auth/register`
+A full-stack ride-hailing application that connects riders with nearby drivers, similar to Uber/Ola. The application provides real-time location tracking, ride matching, and fare calculation.
 
-This endpoint is used to register a new user.
+## ✨ Features
 
-#### Method: POST
+-   🗺️ Real-time location tracking using Google Maps API
+-   🔐 User and Driver (Captain) authentication
+-   💰 Ride booking and fare calculation
+-   ⚡ Real-time ride status updates
+-   🔍 Location search with autocomplete
+-   🔢 OTP verification for ride start
+-   🚘 Multiple vehicle types (Car, Motorcycle, Auto)
+-   📍 Live driver tracking
+-   🔄 Socket-based real-time communication
 
-#### Request Body
+## 🛠️ Tech Stack
 
-The request body should be a JSON object containing the following fields:
+### Backend
 
--   `firstName` (string, required): The first name of the user. Must be at least 2 characters long.
--   `lastName` (string, required): The last name of the user.
--   `email` (string, required): The email address of the user. Must be a valid email format.
--   `password` (string, required): The password for the user. Must be at least 6 characters long.
+-   📦 Node.js
+-   🚀 Express.js
+-   🍃 MongoDB (with Mongoose)
+-   🔌 Socket.IO
+-   🔑 JWT Authentication
+-   🗺️ Google Maps API Integration
+-   🔒 Bcrypt for password hashing
+-   ✅ Express Validator
+-   🌐 CORS
 
-#### Example Request
+### Frontend
 
-```json
-{
-    "fullName": {
-        "firstName": "John",
-        "lastName": "Doe"
-    },
-    "email": "john.doe@example.com",
-    "password": "password123"
-}
+-   ⚛️ React (v19)
+-   🔄 React Router DOM (v7)
+-   💅 TailwindCSS
+-   ✨ GSAP for animations
+-   🔄 React Query (Tanstack Query)
+-   🔌 Socket.IO Client
+-   📡 Axios
+-   🔔 React Hot Toast
+-   🎨 Lucide React Icons
+-   🗺️ Google Maps React Components
+
+## 📁 Project Structure
+
+```bash
+├── backend/
+│   ├── controllers/   # Request handlers
+│   ├── models/        # Database models
+│   ├── routes/        # API routes
+│   ├── services/      # Business logic
+│   ├── utils/         # Helper functions
+│   └── server.js      # Entry point
+└── frontend/
+    ├── src/
+    │   ├── components/  # Reusable UI components
+    │   ├── pages/       # Page components
+    │   ├── utils/       # Helper functions
+    │   └── App.jsx      # Root component
 ```
 
-### Login User
+## 🔧 How It Works
 
-**URL:** `/auth/login`
+### Backend Architecture
 
-**Method:** `POST`
+-   🚀 RESTful API built with Express.js
+-   🗄️ MongoDB database with Mongoose ODM
+-   🔌 Socket.IO for real-time communication
+-   🔐 JWT-based authentication
+-   🗺️ Google Maps API integration for:
+    -   📍 Location geocoding
+    -   📏 Distance calculation
+    -   🛣️ Route optimization
+    -   🔍 Place autocomplete
 
-**Description:** Logs in an existing user.
+### Frontend Architecture
 
-**Request Body:**
+-   ⚛️ React-based SPA
+-   📍 Real-time location tracking
+-   🗺️ Interactive map interface
+-   📱 Responsive design with TailwindCSS
+-   🔄 State management with React Query
+-   🔌 Socket.IO for real-time updates
 
-```json
-{
-    "email": "john.doe@example.com",
-    "password": "password123"
-}
+## 🚀 Getting Started
+
+1. Clone the repository
+
+```bash
+git clone [repository-url]
 ```
 
-### `GET /auth/me`
+2. Install dependencies
 
-#### Description
+```bash
+# Install backend dependencies
+cd backend
+npm install
 
-Fetch the authenticated user's details.
-
-#### Headers
-
--   `Cookie`: `token=<JWT_TOKEN>`
-
-#### Response
-
--   **200 OK**
-    ```json
-    {
-        "_id": "60d0fe4f5311236168a109ca",
-        "fullName": {
-            "firstName": "John",
-            "lastName": "Doe"
-        },
-        "email": "john.doe@example.com",
-        "password": "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Z5l5l5l5l5l5l5l5l5l",
-        "socketId": "someSocketId"
-    }
-    ```
-
-### `POST /auth/logout`
-
-#### Description
-
-Logs out the authenticated user by clearing the authentication token.
-
-#### Headers
-
--   `Cookie`: `token=<JWT_TOKEN>`
-
-#### Response
-
--   **200 OK**
-    ```json
-    {
-        "message": "Logged out successfully"
-    }
-    ```
-
-### `POST /captain/register`
-
-#### Description
-
-Registers a new captain.
-
-#### Request Body
-
-```json
-{
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "password": "password123",
-    "phone": "1234567890",
-    "color": "Red",
-    "plate": "ABC123",
-    "capacity": 4,
-    "type": "car"
-}
+# Install frontend dependencies
+cd frontend
+npm install
 ```
 
-#### Response
+3. Environment Setup
+   Create a `.env` file in the root directory:
 
--   **201 Created**
-    ```json
-    {
-        "message": "Captain created successfully",
-        "captain": {
-            "_id": "60d0fe4f5311236168a109ca",
-            "fullName": {
-                "firstName": "John",
-                "lastName": "Doe"
-            },
-            "email": "john.doe@example.com",
-            "password": "$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Z5l5l5l5l5l5l5l5l5l",
-            "phone": "1234567890",
-            "vehicle": {
-                "color": "Red",
-                "plate": "ABC123",
-                "capacity": 4,
-                "type": "car"
-            },
-            "status": "offline",
-            "socketId": null,
-            "location": {
-                "latitude": null,
-                "longitude": null
-            }
-        }
-    }
-    ```
-
-### `POST /captain/login`
-
-#### Description
-
-Logs in an existing captain.
-
-#### Request Body
-
-```json
-{
-    "email": "john.doe@example.com",
-    "password": "password123"
-}
+```env
+PORT=5000
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+GOOGLE_MAPS_API=your_google_maps_api_key
 ```
 
-#### Response
+4. Run the application
 
--   **200 OK**
-    ```json
-    {
-        "message": "Captain Login successful"
-    }
-    ```
+```bash
+# Run backend
+cd backend
+npm start
 
-### `GET /captain/getCaptain`
+# Run frontend
+cd frontend
+npm run dev
+```
 
-#### Description
+## 🔗 API Endpoints
 
-Fetch the authenticated captain's details.
+### 🔐 Authentication
 
-#### Headers
+-   `POST /api/auth/register` - Register new user
+-   `POST /api/auth/login` - User login
+-   `POST /api/captain/register` - Register new captain
+-   `POST /api/captain/login` - Captain login
 
--   `Cookie`: `token=<JWT_TOKEN>`
+### 🚗 Rides
 
-#### Response
+-   `POST /api/ride/create-ride` - Create new ride
+-   `POST /api/ride/get-fare` - Calculate ride fare
+-   `POST /api/ride/confirm-ride` - Confirm ride
+-   `POST /api/ride/start-ride` - Start ride
 
--   **200 OK**
-    ```json
-    {
-        "_id": "60d0fe4f5311236168a109ca",
-        "fullName": {
-            "firstName": "John",
-            "lastName": "Doe"
-        },
-        "email": "john.doe@example.com",
-        "phone": "1234567890",
-        "vehicle": {
-            "color": "Red",
-            "plate": "ABC123",
-            "capacity": 4,
-            "type": "car"
-        },
-        "status": "offline",
-        "socketId": null,
-        "location": {
-            "latitude": null,
-            "longitude": null
-        }
-    }
-    ```
+### 🗺️ Maps
 
-### `POST /captain/logout`
+-   `GET /api/maps/get-coordinates` - Get location coordinates
+-   `GET /api/maps/get-distance-matrix` - Calculate distance and time
+-   `GET /api/maps/get-suggestion` - Get location suggestions
 
-#### Description
+## 🤝 Contributing
 
-Logs out the authenticated captain by clearing the authentication token.
-
-#### Headers
-
--   `Cookie`: `token=<JWT_TOKEN>`
-
-#### Response
-
--   **200 OK**
-    ```json
-    {
-        "message": "Logged out successfully"
-    }
-    ```
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -17,7 +17,12 @@ const RideOnGoing = ({ ongoingRideData }) => {
                 <p>Status: {status}</p>
             </div>
 
-            <button className='px-5 py-2 text-white bg-green-500 rounded cursor-pointer'>
+            <button
+                className='px-5 py-2 text-white bg-green-500 rounded cursor-pointer'
+                onClick={() => {
+                    window.location.reload();
+                }}
+            >
                 Make Payment
             </button>
         </div>

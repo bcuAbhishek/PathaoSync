@@ -14,7 +14,7 @@ import LiveTracking from '../components/LiveTracking';
 import Logout from '../utils/Logout';
 import RideOnGoing from '../components/RideOnGoing';
 
-const Home = () => {
+const Home = ({ setExactLocation }) => {
     const [PanelOpen, setPanelOpen] = useState(false);
     const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false);
     const [confirmRideOpen, setConfirmRideOpen] = useState(false);
@@ -25,6 +25,7 @@ const Home = () => {
     const [vehiclePrice, setVehiclePrice] = useState({});
     const [captainConfirmedPanel, setCaptainConfirmedPanel] = useState(false);
     const [rideOngoing, setRideOngoing] = useState(false);
+    const [finishPayment, setFinishPayment] = useState(false);
 
     const PanelRef = useRef(null);
     const vehiclePanelRef = useRef(null);
@@ -32,6 +33,7 @@ const Home = () => {
     const lookingForDriverRef = useRef(null);
     const captainConfirmedRef = useRef(null);
     const rideOngoingRef = useRef(null);
+    const finishPaymentRef = useRef(null);
 
     useEffect(() => {
         gsap.to(PanelRef.current, {
@@ -57,6 +59,28 @@ const Home = () => {
         });
     }, [rideOngoing]);
 
+    useEffect(() => {
+        gsap.to(finishPaymentRef.current, {
+            height: finishPayment ? 'auto' : '0%',
+        });
+    }, [finishPayment]);
+
+    useEffect(() => {
+        if (captainConfirmedPanel) {
+            gsap.to(captainConfirmedRef.current, {
+                height: 'auto',
+                duration: 0.5, // Smooth animation
+                ease: 'power2.out',
+            });
+        } else {
+            gsap.to(captainConfirmedRef.current, {
+                height: '0%',
+                duration: 0.5,
+                ease: 'power2.in',
+            });
+        }
+    }, [captainConfirmedPanel]); // Trigger animation when captainConfirmedPanel changes
+
     const { sendMessage, receiveMessage } = useContext(SocketContext);
 
     const { authUser } = useAuthUser();
@@ -71,7 +95,7 @@ const Home = () => {
             setConfirmedCaptainData(data);
             setCaptainConfirmedPanel(true);
         });
-    });
+    }, [receiveMessage, sendMessage, authUser._id]);
 
     const [ongoingRideData, setOngoingRideData] = useState({});
 
@@ -143,88 +167,87 @@ const Home = () => {
     };
 
     return (
-        <>
-            <div className='flex flex-col h-screen overflow-y-hidden relative'>
-                <div className='flex justify-between items-center text-white p-1'>
-                    <h2 className='text-2xl font-bold text-black'>
-                        Sasta Pathao
+        <div className='h-[667px] w-[375px] relative bg-gray-50 overflow-hidden'>
+            <div className='absolute top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm'>
+                <div className='flex justify-between items-center px-4 py-3'>
+                    <h2 className='text-xl font-bold text-gray-900'>
+                        PathaoSync
                     </h2>
                     <Logout />
                 </div>
-
-                <div>
-                    <LiveTracking />
-                </div>
-
-                <div
-                    ref={PanelRef}
-                    className='absolute bottom-0 w-full bg-white'
-                >
-                    <SearchLocation
-                        PanelOpen={PanelOpen}
-                        setPanelOpen={setPanelOpen}
-                        setVehiclePanelOpen={setVehiclePanelOpen}
-                        pickupInput={pickupInput}
-                        setPickupInput={setPickupInput}
-                        destinationInput={destinationInput}
-                        setDestinationInput={setDestinationInput}
-                        handleVehiclePrice={handleVehiclePrice}
-                    />
-                </div>
-                <div
-                    className='w-full absolute bottom-0 bg-white'
-                    ref={vehiclePanelRef}
-                >
-                    <VehicleChoosePanel
-                        vehiclePanelOpen={vehiclePanelOpen}
-                        setVehiclePanelOpen={setVehiclePanelOpen}
-                        setConfirmRideOpen={setConfirmRideOpen}
-                        vehiclePrice={vehiclePrice}
-                        setSelectedVehicle={setSelectedVehicle}
-                        selectedVehicle={selectedVehicle}
-                    />
-                </div>
-                <div
-                    className='w-full absolute bottom-0 bg-white'
-                    ref={confirmRideRef}
-                >
-                    <ConfirmRide
-                        vehicleFound={vehicleFound}
-                        setVehicleFound={setVehicleFound}
-                        setConfirmRideOpen={setConfirmRideOpen}
-                        pickupInput={pickupInput}
-                        destinationInput={destinationInput}
-                        vehiclePrice={vehiclePrice}
-                        setSelectedVehicle={setSelectedVehicle}
-                        selectedVehicle={selectedVehicle}
-                        confirmRide={confirmRide}
-                    />
-                </div>
-                <div
-                    className='w-full absolute bottom-0 bg-white'
-                    ref={lookingForDriverRef}
-                >
-                    <LookingForDriver
-                        vehicleFound={vehicleFound}
-                        setVehicleFound={setVehicleFound}
-                    />
-                </div>
-                <div
-                    className={`w-full absolute bottom-0 ${
-                        captainConfirmedPanel ? 'visible' : 'hidden'
-                    }`}
-                    ref={captainConfirmedRef}
-                >
-                    <CaptainConfirmedPanel
-                        confirmedCaptainData={confirmedCaptainData}
-                        // confirmCaptainAndSendOtp={confirmCaptainAndSendOtp}
-                    />
-                </div>
-                <div className='w-full absolute bottom-0' ref={rideOngoingRef}>
-                    <RideOnGoing ongoingRideData={ongoingRideData} />
-                </div>
             </div>
-        </>
+
+            <div className='absolute inset-0 pt-[52px]'>
+                <LiveTracking setExactLocation={setExactLocation} />
+            </div>
+
+            <div ref={PanelRef} className='absolute bottom-0 w-full bg-white'>
+                <SearchLocation
+                    PanelOpen={PanelOpen}
+                    setPanelOpen={setPanelOpen}
+                    setVehiclePanelOpen={setVehiclePanelOpen}
+                    pickupInput={pickupInput}
+                    setPickupInput={setPickupInput}
+                    destinationInput={destinationInput}
+                    setDestinationInput={setDestinationInput}
+                    handleVehiclePrice={handleVehiclePrice}
+                />
+            </div>
+            <div
+                className='w-full absolute bottom-0 bg-white'
+                ref={vehiclePanelRef}
+            >
+                <VehicleChoosePanel
+                    vehiclePanelOpen={vehiclePanelOpen}
+                    setVehiclePanelOpen={setVehiclePanelOpen}
+                    setConfirmRideOpen={setConfirmRideOpen}
+                    vehiclePrice={vehiclePrice}
+                    setSelectedVehicle={setSelectedVehicle}
+                    selectedVehicle={selectedVehicle}
+                />
+            </div>
+            <div
+                className='w-full absolute bottom-0 bg-white'
+                ref={confirmRideRef}
+            >
+                <ConfirmRide
+                    vehicleFound={vehicleFound}
+                    setVehicleFound={setVehicleFound}
+                    setConfirmRideOpen={setConfirmRideOpen}
+                    pickupInput={pickupInput}
+                    destinationInput={destinationInput}
+                    vehiclePrice={vehiclePrice}
+                    setSelectedVehicle={setSelectedVehicle}
+                    selectedVehicle={selectedVehicle}
+                    confirmRide={confirmRide}
+                />
+            </div>
+            <div
+                className='w-full absolute bottom-0 bg-white'
+                ref={lookingForDriverRef}
+            >
+                <LookingForDriver
+                    vehicleFound={vehicleFound}
+                    setVehicleFound={setVehicleFound}
+                />
+            </div>
+            <div className='w-full absolute bottom-0'>
+                {captainConfirmedPanel && (
+                    <div ref={captainConfirmedRef}>
+                        <CaptainConfirmedPanel
+                            confirmedCaptainData={confirmedCaptainData}
+                        />
+                    </div>
+                )}
+            </div>
+
+            <div className='w-full absolute bottom-0' ref={rideOngoingRef}>
+                <RideOnGoing
+                    ongoingRideData={ongoingRideData}
+                    setFinishPayment={setFinishPayment}
+                />
+            </div>
+        </div>
     );
 };
 
