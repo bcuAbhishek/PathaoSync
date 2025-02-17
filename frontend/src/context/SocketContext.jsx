@@ -3,13 +3,11 @@ import { io } from 'socket.io-client';
 
 export const SocketContext = createContext();
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        const newSocket = io(BACKEND_URL);
+        const newSocket = io('http://localhost:5000'); // Replace with your server URL
         setSocket(newSocket);
 
         newSocket.on('connect', () => {

@@ -76,7 +76,7 @@ const LiveTracking = ({ setExactLocation }) => {
     return (
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}>
             <GoogleMap
-                key={`${currentPosition.lat}-${currentPosition.lng}`} // Force re-render when position changes
+                key={`${currentPosition.lat}-${currentPosition.lng}`}
                 mapContainerStyle={containerStyle}
                 center={currentPosition}
                 zoom={17}
