@@ -1,0 +1,27 @@
+services:
+    - type: web
+      name: pathaosync-api
+      env: node
+      rootDir: backend
+      buildCommand: npm install
+      startCommand: npm start
+      envVars:
+          - key: NODE_ENV
+            value: production
+          - key: MONGO_URI
+            sync: false
+          - key: JWT_SECRET
+            sync: false
+          - key: GOOGLE_MAPS_API
+            sync: false
+
+    - type: static
+      name: pathaosync
+      rootDir: frontend
+      buildCommand: npm install && npm run build
+      publishDir: dist
+      envVars:
+          - key: VITE_BACKEND_URL
+            value: https://pathaosync-api.onrender.com
+          - key: VITE_GOOGLE_MAPS_API
+            sync: false
