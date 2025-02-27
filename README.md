@@ -1,6 +1,6 @@
 # 🚗 Ride Hailing Application (PathaoSync)
 
-<video src="./frontend/public/PathaoSync.mp4" width="100%" height="auto" controls></video>
+<img src="./frontend/public/pathaosync-demo.jpg" alt="PathaoSync Demo" width="800"/>
 
 A full-stack ride-hailing application that connects riders with nearby drivers, similar to Uber/Ola. The application provides real-time location tracking, ride matching, and fare calculation.
 
